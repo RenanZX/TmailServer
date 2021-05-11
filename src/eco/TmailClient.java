@@ -23,7 +23,7 @@ public class TmailClient {
         //2. Caixa de Entrada
         //3. Lixo
         
-        /*A replica recebe o comando o processa
+        /*A replica recebe o comando e processa
         (ainda to na dúvida se a gente faz para cada réplica processar uma operação ou 
         qualquer réplica processar qualquer operação, e caso falhe passe o comando para
         a próxima).

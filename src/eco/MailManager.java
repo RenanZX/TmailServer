@@ -52,14 +52,17 @@ public class MailManager {
         }
     }
     
-    public void PostEmail(String email, String message){
-        String sqlv = "insert into messages(message, origem_mail) values("+message+","+email+")";
+    private void ExecuteCmd(String cmd){
         try{
             Statement st = conn.createStatement();
-            st.execute(sqlv);
+            st.execute(cmd);
         }catch(SQLException e){
             System.out.println(e.getMessage());
         }
+    }
+    
+    public void PostEmail(String email, String message){
+        ExecuteCmd("insert into messages(message, origem_mail) values("+message+","+email+")");
     }
     
     public void PrintEmails(String email){
@@ -76,6 +79,18 @@ public class MailManager {
         }catch(SQLException e){
             System.out.println(e.getMessage());
         }
+    }
+    
+    public void ExcluirMensagem(String message, String email){
+        ExecuteCmd("delete from messages where message = "+message+" and email = "+email);
+    }
+    
+    public void CadastrarEmail(String email){
+        ExecuteCmd("insert into mailsreg(email) values ("+email+")");
+    }
+    
+    public void ExcluirEmail(String email){
+        ExecuteCmd("delete from mailsreg where email = "+email);
     }
     
     
