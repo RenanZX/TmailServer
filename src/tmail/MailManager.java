@@ -65,19 +65,20 @@ public class MailManager {
         ExecuteCmd("insert into messages(message, origem_mail) values("+message+","+email+")");
     }
     
-    public void PrintEmails(String email){
+    public String PrintEmails(String email){
         String sqlv = "select message,origem_mail from messages where email = "+email;
         try{
             Statement st = conn.createStatement();
             ResultSet res = st.executeQuery(sqlv);
-            
+            String result = "";
             while(res.next()){
-              System.out.println("====================================");
-              System.out.println("Email:"+res.getString("origem_mail"));
-              System.out.println("Message:"+res.getString("message"));
+              result += "====================================\n";
+              result += "Email:"+res.getString("origem_mail")+"\n";
+              result += "Message:"+res.getString("message") + "\n";
             }
+            return result;
         }catch(SQLException e){
-            System.out.println(e.getMessage());
+            return e.getMessage();
         }
     }
     

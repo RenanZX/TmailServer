@@ -6,6 +6,7 @@
 package tmail;
 
 import bftsmart.tom.ServiceProxy;
+import java.util.Scanner;
 
 /**
  *
@@ -13,10 +14,16 @@ import bftsmart.tom.ServiceProxy;
  */
 public class TmailClient {
     
+    private static final int CADASTRAR = 1;
+    private static final int ENVIAR_EMAIL = 2;
+    private static final int CAIXA_ENTRADA = 3;
+    private static final int LIXO = 4;
+    
     public static void main(String[] args){
         ServiceProxy proxy = new ServiceProxy(1001);
+        Scanner input = new Scanner(System.in);
         
-        byte[] request = args[0].getBytes();
+       // byte[] request = args[0].getBytes();
         
         //O cliente envia uma mensagem dizendo um comando
         //1. Enviar Email.
@@ -28,14 +35,48 @@ public class TmailClient {
         qualquer réplica processar qualquer operação, e caso falhe passe o comando para
         a próxima).
         */
-        byte[] reply = proxy.invokeOrdered(request);
+        System.out.println("1. Cadastrar Email");
+        System.out.println("2. Enviar Email");
+        System.out.println("3. Caixa de Entrada");
+        System.out.println("4. Lixo");
+        int op = input.nextInt();
+        input.nextLine();
+        String entrada = "";
+        
+        switch(op){
+            case CADASTRAR:
+                System.out.println("Digite o email que deseja cadastrar:");
+                entrada = input.nextLine();
+                break;
+            case ENVIAR_EMAIL:
+                System.out.println("Digite o email do destinatario:");
+                entrada = input.nextLine();
+                input.nextLine();
+                entrada += ";";
+                System.out.println("Digite a mensagem:");
+                entrada += input.nextLine();
+                input.nextLine();
+                break;
+            case CAIXA_ENTRADA:
+                System.out.println("Digite o email que deseja consultar:");
+                entrada = input.nextLine();
+                input.nextLine();
+                break;
+            case LIXO:
+                System.out.println("Digite o email que deseja consultar:");
+                entrada = input.nextLine();
+                input.nextLine();
+                break;
+        }
+        
+        
+        byte[] request = (op + "#" + entrada).getBytes(); 
+        byte[] reply = proxy.invokeUnordered(request);
+        
         
         String replyString = new String(reply);
         
-        System.out.println("Valor recebido com sucesso!");
-        
-        System.out.println("Resposta recebida: "+replyString);
-        
+        System.out.println(replyString);
         
     }
     
