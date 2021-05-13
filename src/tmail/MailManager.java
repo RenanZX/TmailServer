@@ -18,7 +18,7 @@ import java.sql.Statement;
 public class MailManager {
     private Connection conn = null;
     
-    public MailManager(){
+    MailManager(){
         try{
             String url = "jdbc:sqlite:emails.db";
             // create a connection to the database
@@ -27,46 +27,38 @@ public class MailManager {
             System.out.println("Connected to emails db!");
         }catch(SQLException e){
             System.out.println(e.getMessage());
-        }finally {
-            try {
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException ex) {
-                System.out.println(ex.getMessage());
-            }
         }
     }
     
-    protected void finalize() throws Throwable{
-      CloseConection();
-    }
     
     void CloseConection(){
         try{
             if(conn != null){
                 conn.close();
             }
+            System.out.println("Closing connection");
         }catch(SQLException e){
             System.out.println(e.getMessage());
         }
     }
     
     private void ExecuteCmd(String cmd){
+        System.out.println("Comando a executar:"+cmd);
         try{
             Statement st = conn.createStatement();
             st.execute(cmd);
+            st.close();
         }catch(SQLException e){
-            System.out.println(e.getMessage());
+            System.out.println("Exception!"+e.getMessage());
         }
     }
     
-    public void PostEmail(String email, String message){
-        ExecuteCmd("insert into messages(message, origem_mail) values("+message+","+email+")");
+    public void PostEmail(String origem, String email, String message){
+        ExecuteCmd("insert into messages(message, origem_email, email) values('"+message+"','"+origem+"','"+email+"')");
     }
     
     public String PrintEmails(String email){
-        String sqlv = "select message,origem_mail from messages where email = "+email;
+        String sqlv = "select message,origem_email from messages where email = '"+email+"'";
         try{
             Statement st = conn.createStatement();
             ResultSet res = st.executeQuery(sqlv);
@@ -76,6 +68,7 @@ public class MailManager {
               result += "Email:"+res.getString("origem_mail")+"\n";
               result += "Message:"+res.getString("message") + "\n";
             }
+            st.close();
             return result;
         }catch(SQLException e){
             return e.getMessage();
@@ -83,15 +76,15 @@ public class MailManager {
     }
     
     public void ExcluirMensagem(String message, String email){
-        ExecuteCmd("delete from messages where message = "+message+" and email = "+email);
+        ExecuteCmd("delete from messages where message = '"+message+"' and email = '"+email+"'");
     }
     
     public void CadastrarEmail(String email){
-        ExecuteCmd("insert into mailsreg(email) values ("+email+")");
+        ExecuteCmd("insert into mailsreg(email) values ('"+email+"')");
     }
     
     public void ExcluirEmail(String email){
-        ExecuteCmd("delete from mailsreg where email = "+email);
+        ExecuteCmd("delete from mailsreg where email = '"+email+"'");
     }
     
     
