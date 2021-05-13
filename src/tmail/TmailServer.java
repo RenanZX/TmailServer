@@ -21,7 +21,8 @@ public class TmailServer extends DefaultSingleRecoverable{
     private static final int CADASTRAR = 1;
     private static final int ENVIAR_EMAIL = 2;
     private static final int CAIXA_ENTRADA = 3;
-    private static final int LIXO = 4;
+    private static final int DESCADASTRAR_EMAIL = 4;
+    private static final int EXCLUIR_EMAIL = 6;
     
     
     private int id = 0;
@@ -41,7 +42,8 @@ public class TmailServer extends DefaultSingleRecoverable{
          //return ("Resposta servidor: ").getBytes();
          
         
-        return ("id "+id).getBytes();
+        //return ("id "+id).getBytes();
+        throw new UnsupportedOperationException("Requisição Inválida!");
         
     }
 
@@ -85,6 +87,14 @@ public class TmailServer extends DefaultSingleRecoverable{
                     m.CloseConection();
                     System.out.println("Retorna valor de sucesso!\n");
                     return ("Email Postado Com sucesso").getBytes();
+                case EXCLUIR_EMAIL:
+                    System.out.println("id do email a ser excluido: "+request.inputValue);
+                    m.ExcluirMensagem(request.inputValue);
+                    return ("Email Excluído\n").getBytes();
+                case DESCADASTRAR_EMAIL:
+                    System.out.println("email a ser descadastrado: "+request.inputValue);
+                    m.ExcluirEmail(request.inputValue);
+                    return ("Email Descadastrado com sucesso\n").getBytes();
             }
         
         }
@@ -98,10 +108,10 @@ public class TmailServer extends DefaultSingleRecoverable{
                 String ret = m.PrintEmails(request.inputValue);
                 m.CloseConection();
                 return (ret).getBytes();
-            case LIXO:
-                //email = req[1];
-                //m.PrintTrash(email);
-                return ("Lixo").getBytes();
+            case EXCLUIR_EMAIL:
+                return ("Email Excluído\n").getBytes();
+            case DESCADASTRAR_EMAIL:
+                return ("Email Descadastrado com sucesso\n").getBytes();
         }
         return ("Falha na operação!\n").getBytes();
         

@@ -7,9 +7,7 @@ package tmail;
 
 import tmail.State;
 import bftsmart.tom.ServiceProxy;
-import java.io.IOException;
 import java.util.Scanner;
-
 /**
  *
  * @author eduardo
@@ -19,9 +17,12 @@ public class TmailClient {
     private static final int CADASTRAR = 1;
     private static final int ENVIAR_EMAIL = 2;
     private static final int CAIXA_ENTRADA = 3;
-    private static final int LIXO = 4;
+    private static final int DESCADASTRAR_EMAIL = 4;
     private static final int SAIR = 5;
+    
+    private static final int EXCLUIR_EMAIL = 6;
    
+    
     
     public static void main(String[] args){
         ServiceProxy proxy = new ServiceProxy(1001);
@@ -31,21 +32,11 @@ public class TmailClient {
         
        // byte[] request = args[0].getBytes();
         
-        //O cliente envia uma mensagem dizendo um comando
-        //1. Enviar Email.
-        //2. Caixa de Entrada
-        //3. Lixo
-        
-        /*A replica recebe o comando e processa
-        (ainda to na dúvida se a gente faz para cada réplica processar uma operação ou 
-        qualquer réplica processar qualquer operação, e caso falhe passe o comando para
-        a próxima).
-        */
         while(op != SAIR){
             System.out.println("1. Cadastrar Email");
             System.out.println("2. Enviar Email");
             System.out.println("3. Caixa de Entrada");
-            System.out.println("4. Lixo");
+            System.out.println("4. Descadastrar Email");
             System.out.println("5. Sair");
             op = input.nextInt();
             input.nextLine();
@@ -72,13 +63,19 @@ public class TmailClient {
                     System.out.println("Digite o email que deseja consultar:");
                     entrada = input.nextLine();
                     break;
-                case LIXO:
-                    System.out.println("Digite o email que deseja consultar:");
+                case DESCADASTRAR_EMAIL:
+                    System.out.println("Digite o email que deseja descadastrar:");
                     entrada = input.nextLine();
                     break;
                 case SAIR:
                     proxy.close();
                     return;
+            }
+            
+            if(entrada.contains("#")){
+               System.out.println("Erro entrada inválida!");
+               proxy.close();
+               return;
             }
             
             st.inputValue = entrada;
@@ -90,6 +87,22 @@ public class TmailClient {
                 String replyString = new String(reply);
                 System.out.println("Resposta do Servidor:"+replyString);
                 st.UpdateState();
+                if(op == CAIXA_ENTRADA){
+                  System.out.println("Deseja excluir um email?(S/N) \n");
+                  entrada = input.nextLine();
+                  input.nextLine();
+                  if(entrada.equals("S")){
+                     System.out.println("Digite o id que deseja excluir:");
+                     entrada = input.nextLine();
+                     st.inputValue = entrada;
+                     st.operation = EXCLUIR_EMAIL;
+                     request = st.getBytes();
+                     reply = proxy.invokeUnordered(request);
+                     replyString = new String(reply);
+                     System.out.println("Resposta do Servidor:"+replyString);
+                     st.UpdateState();
+                  }
+                }
             }catch(Exception e){
                 System.out.println("Falha no servidor:" + e.getMessage());
               if(e.getMessage().contains("Impossible to connect to servers!")){

@@ -58,16 +58,18 @@ public class MailManager {
     }
     
     public String PrintEmails(String email){
-        String sqlv = "select message,origem_email from messages where email = '"+email+"'";
+        String sqlv = "select * from messages where email = '"+email+"'";
         try{
             Statement st = conn.createStatement();
             ResultSet res = st.executeQuery(sqlv);
             String result = "";
             while(res.next()){
-              result += "====================================\n";
-              result += "Email:"+res.getString("origem_mail")+"\n";
+              result += "\n====================================\n";
+              result += "Id: "+res.getInt("id")+"\n";
+              result += "Email:"+res.getString("origem_email")+"\n";
               result += "Message:"+res.getString("message") + "\n";
             }
+            result += "====================================\n";
             st.close();
             return result;
         }catch(SQLException e){
@@ -75,8 +77,8 @@ public class MailManager {
         }
     }
     
-    public void ExcluirMensagem(String message, String email){
-        ExecuteCmd("delete from messages where message = '"+message+"' and email = '"+email+"'");
+    public void ExcluirMensagem(String id){
+        ExecuteCmd("delete from messages where id = '"+id+"'");
     }
     
     public void CadastrarEmail(String email){
@@ -85,6 +87,7 @@ public class MailManager {
     
     public void ExcluirEmail(String email){
         ExecuteCmd("delete from mailsreg where email = '"+email+"'");
+        ExecuteCmd("delete from messages where email = '"+email+"'");
     }
     
     
