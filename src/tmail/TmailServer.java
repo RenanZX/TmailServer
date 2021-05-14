@@ -38,7 +38,7 @@ public class TmailServer extends DefaultSingleRecoverable{
     public byte[] appExecuteOrdered(byte[] bytes, MessageContext mc) { 
         //String request = new String(bytes);
         //System.out.println("ID count:"+id);
-        request = new State(bytes);
+        request.setBytes(bytes);
         
         MailManager m = new MailManager(id);
         request.PrintState();
