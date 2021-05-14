@@ -27,7 +27,7 @@ public class TmailClient {
     public static void main(String[] args){
         ServiceProxy proxy = new ServiceProxy(1001);
         Scanner input = new Scanner(System.in);
-        State st = new State(0);
+        State st = new State();
         int op = 0;
         
        // byte[] request = args[0].getBytes();
@@ -86,7 +86,6 @@ public class TmailClient {
                 byte[] reply = proxy.invokeUnordered(request);
                 String replyString = new String(reply);
                 System.out.println("Resposta do Servidor:"+replyString);
-                st.UpdateState();
                 if(op == CAIXA_ENTRADA){
                   System.out.println("Deseja excluir um email?(S/N) \n");
                   entrada = input.nextLine();
@@ -100,7 +99,6 @@ public class TmailClient {
                      reply = proxy.invokeUnordered(request);
                      replyString = new String(reply);
                      System.out.println("Resposta do Servidor:"+replyString);
-                     st.UpdateState();
                   }
                 }
             }catch(Exception e){

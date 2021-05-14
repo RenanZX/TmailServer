@@ -53,66 +53,54 @@ public class TmailServer extends DefaultSingleRecoverable{
         //System.out.println("ID count:"+id);
         State request = new State(bytes);
         
-        MailManager m = new MailManager();
+        MailManager m = new MailManager(id);
         request.PrintState();
-        
-        if(request.leader == id){
-        
-            System.out.println("Requisição recebida: "+request.operation);
-            if(request.operation == -1){
-                System.out.println("Requisição Inválida!");
-                throw new UnsupportedOperationException("Requisição Inválida!"); //To change body of generated methods, choose Tools | Templates.
-            }
-            String origem = "";
-            String email = "";
-            String message = "";
-            if(request.inputValue.contains(";")){
-                String[] res = request.inputValue.split(";");
-                origem = res[0];
-                email = res[1];
-                message = res[2];
-            }else{
-                email = request.inputValue;
-            }
-            switch(request.operation){
-                case CADASTRAR:
-                    System.out.println("Email a cadastrar:"+email);
-                    m.CadastrarEmail(email);
-                    m.CloseConection();
-                    return ("Email Cadastrado com sucesso!").getBytes();
-                case ENVIAR_EMAIL:
-                    System.out.println("Email destinatario:"+email);
-                    System.out.println("Mensagem a ser entrege:"+message);
-                    m.PostEmail(origem, email, message);
-                    m.CloseConection();
-                    System.out.println("Retorna valor de sucesso!\n");
-                    return ("Email Postado Com sucesso").getBytes();
-                case EXCLUIR_EMAIL:
-                    System.out.println("id do email a ser excluido: "+request.inputValue);
-                    m.ExcluirMensagem(request.inputValue);
-                    return ("Email Excluído\n").getBytes();
-                case DESCADASTRAR_EMAIL:
-                    System.out.println("email a ser descadastrado: "+request.inputValue);
-                    m.ExcluirEmail(request.inputValue);
-                    return ("Email Descadastrado com sucesso\n").getBytes();
-            }
-        
+        System.out.println("Requisição recebida: "+request.operation);
+        if(request.operation == -1){
+           System.out.println("Requisição Inválida!");
+           throw new UnsupportedOperationException("Requisição Inválida!"); //To change body of generated methods, choose Tools | Templates.
+        }
+            
+        String origem = "";
+        String email = "";
+        String message = "";
+        if(request.inputValue.contains(";")){
+          String[] res = request.inputValue.split(";");
+          origem = res[0];
+          email = res[1];
+          message = res[2];
+        }else{
+          email = request.inputValue;
         }
         switch(request.operation){
             case CADASTRAR:
-                return ("Email Cadastrado com sucesso!").getBytes();
+              System.out.println("Email a cadastrar:"+email);
+              m.CadastrarEmail(email);
+              m.CloseConection();
+              return ("Email Cadastrado com sucesso!").getBytes();
             case ENVIAR_EMAIL:
-                return ("Email Postado Com sucesso").getBytes();
-            case CAIXA_ENTRADA:
-                System.out.println("Email recebido: "+request.inputValue);
-                String ret = m.PrintEmails(request.inputValue);
-                m.CloseConection();
-                return (ret).getBytes();
+              System.out.println("Email destinatario:"+email);
+              System.out.println("Mensagem a ser entrege:"+message);
+              m.PostEmail(origem, email, message);
+              m.CloseConection();
+              System.out.println("Retorna valor de sucesso!\n");
+              return ("Email Postado Com sucesso").getBytes();
             case EXCLUIR_EMAIL:
-                return ("Email Excluído\n").getBytes();
+              System.out.println("id do email a ser excluido: "+request.inputValue);
+              m.ExcluirMensagem(request.inputValue);
+              return ("Email Excluído\n").getBytes();
             case DESCADASTRAR_EMAIL:
-                return ("Email Descadastrado com sucesso\n").getBytes();
-        }
+              System.out.println("email a ser descadastrado: "+request.inputValue);
+              m.ExcluirEmail(request.inputValue);
+              return ("Email Descadastrado com sucesso\n").getBytes();
+            case CAIXA_ENTRADA:
+              System.out.println("Email recebido: "+request.inputValue);
+              String ret = m.PrintEmails(request.inputValue);
+              m.CloseConection();
+              return (ret).getBytes();
+            }
+        
+        
         return ("Falha na operação!\n").getBytes();
         
     }

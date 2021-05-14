@@ -18,9 +18,9 @@ import java.sql.Statement;
 public class MailManager {
     private Connection conn = null;
     
-    MailManager(){
+    MailManager(int id){
         try{
-            String url = "jdbc:sqlite:emails.db";
+            String url = "jdbc:sqlite:emails"+id+".db";
             // create a connection to the database
             conn = DriverManager.getConnection(url);
             
