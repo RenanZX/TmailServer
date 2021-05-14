@@ -24,34 +24,21 @@ public class TmailServer extends DefaultSingleRecoverable{
     private static final int DESCADASTRAR_EMAIL = 4;
     private static final int EXCLUIR_EMAIL = 6;
     
+    private State request;
     
     private int id = 0;
     
     public TmailServer(int id) {
         this.id = id;
+        this.request = new State();
         new ServiceReplica(id,this,this);
     }
 
     @Override
     public byte[] appExecuteOrdered(byte[] bytes, MessageContext mc) { 
-         //c++;
-         
-         //System.out.println("Recebeu requisição "+c+": "+request);
-         
-         
-         //return ("Resposta servidor: ").getBytes();
-         
-        
-        //return ("id "+id).getBytes();
-        throw new UnsupportedOperationException("Requisição Inválida!");
-        
-    }
-
-    @Override
-    public byte[] appExecuteUnordered(byte[] bytes, MessageContext mc) {
         //String request = new String(bytes);
         //System.out.println("ID count:"+id);
-        State request = new State(bytes);
+        request = new State(bytes);
         
         MailManager m = new MailManager(id);
         request.PrintState();
@@ -102,17 +89,23 @@ public class TmailServer extends DefaultSingleRecoverable{
         
         
         return ("Falha na operação!\n").getBytes();
+
         
+    }
+
+    @Override
+    public byte[] appExecuteUnordered(byte[] bytes, MessageContext mc) {
+        throw new UnsupportedOperationException("Requisição Inválida!");        
     }
     
     @Override
     public byte[] getSnapshot() {
-        return Integer.toString(id).getBytes();
+        return request.getBytes();
     }
 
     @Override
     public void installSnapshot(byte[] bytes) {
-        id = Integer.parseInt(new String(bytes));
+        request.setBytes(bytes);
     }
 
    

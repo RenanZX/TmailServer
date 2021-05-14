@@ -16,6 +16,8 @@ public class State {
     public String inputValue;
     
     State(){
+        operation = -1;
+        inputValue = "$";
     }
     
     State(byte[] bytes){
@@ -40,6 +42,7 @@ public class State {
     
     void setBytes(byte[] bytes){
         String values = new String(bytes);
+        System.out.println("valores:"+values);
         String[] arrv = values.split("#");
         
         try{

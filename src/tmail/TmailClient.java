@@ -83,7 +83,7 @@ public class TmailClient {
             byte[] request;
             request = st.getBytes();
             try{
-                byte[] reply = proxy.invokeUnordered(request);
+                byte[] reply = proxy.invokeOrdered(request);
                 String replyString = new String(reply);
                 System.out.println("Resposta do Servidor:"+replyString);
                 if(op == CAIXA_ENTRADA){
@@ -96,7 +96,7 @@ public class TmailClient {
                      st.inputValue = entrada;
                      st.operation = EXCLUIR_EMAIL;
                      request = st.getBytes();
-                     reply = proxy.invokeUnordered(request);
+                     reply = proxy.invokeOrdered(request);
                      replyString = new String(reply);
                      System.out.println("Resposta do Servidor:"+replyString);
                   }
