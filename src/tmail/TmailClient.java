@@ -41,7 +41,8 @@ public class TmailClient {
             op = input.nextInt();
             input.nextLine();
             String entrada = "";
-        
+            String aux = "";
+            
             switch(op){
                 case CADASTRAR:
                     System.out.println("Digite o email que deseja cadastrar:");
@@ -49,15 +50,34 @@ public class TmailClient {
                     break;
                 case ENVIAR_EMAIL:
                     System.out.println("Digite o seu email:");
-                    entrada = input.nextLine();
+                    aux = input.nextLine();
                     input.nextLine();
+                    if(aux.contains(";")){
+                        System.out.println("Erro entrada inválida!");
+                        proxy.close();
+                        return;
+                    }
+                    entrada += aux;
                     entrada += ";";
+                    
                     System.out.println("Digite o email do destinatario:");
-                    entrada += input.nextLine();
+                    aux = input.nextLine();
                     input.nextLine();
+                    if(aux.contains(";")){
+                        System.out.println("Erro entrada inválida!");
+                        proxy.close();
+                        return;
+                    }
+                    entrada += aux;
                     entrada += ";";
                     System.out.println("Digite a mensagem:");
-                    entrada += input.nextLine();
+                    aux = input.nextLine();
+                    entrada += aux;
+                    if(aux.contains(";")){
+                        System.out.println("Erro entrada inválida!");
+                        proxy.close();
+                        return;
+                    }
                     break;
                 case CAIXA_ENTRADA:
                     System.out.println("Digite o email que deseja consultar:");

@@ -10,6 +10,7 @@ import bftsmart.tom.MessageContext;
 import bftsmart.tom.ServiceReplica;
 import bftsmart.tom.server.defaultservices.DefaultSingleRecoverable;
 import java.util.Scanner;
+import java.util.logging.Logger;
 import tmail.MailManager;
 
 /**
