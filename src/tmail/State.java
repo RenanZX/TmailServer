@@ -5,8 +5,6 @@
  */
 package tmail;
 
-import java.util.Random;
-
 /**
  *
  * @author RenanPC
